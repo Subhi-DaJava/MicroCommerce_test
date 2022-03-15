@@ -6,6 +6,9 @@ import com.ecommerce.microcommerce.web.model.Product;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +20,15 @@ import java.util.Objects;
 
 @RestController
 public class ProductController {
-    private final ProductDAO productDAO;
+    @Autowired
+    private ProductDAO productDAO;
     //Même pas besoin de spécifier son implémentation(ProductDAO -> ProductDAOImpl)
     /**
      * Tout d'abord, nous avons créé une variable de type ProductDao, que nous avons définie en private final afin que
      * Spring se charge d'en fabriquer une instance que nous injectons dans le constructeur. ProductDao a désormais accès à toutes les méthodes
      * que nous avons définies.
      */
-    public ProductController(ProductDAO productDAO){
-        this.productDAO = productDAO;
-    }
+
     /**
      * SimpleBeanPropertyFilter est une implémentation de PropertyFilter qui permet d'établir les règles de filtrage sur un Bean donné.
      * La règle serializeAllExcept("") qui exclut uniquement les propriétés que nous souhaitons ignorer.
@@ -114,5 +116,17 @@ public class ProductController {
                 .toUri();
         return ResponseEntity.created(location).build();
     }
+    //Supprimer un produit
+    @DeleteMapping (value = "/Produits/{id}")
+    public void supprimerProduit(@PathVariable int id) {
+        productDAO.deleteById(id);
+    }
+    //Mettre à jours un produit (le même id)
+    @PutMapping (value = "/Produits")
+    public void updateProduit(@RequestBody Product product)
+    {
+        productDAO.save(product);
+    }
+
 
 }
