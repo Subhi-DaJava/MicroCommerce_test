@@ -7,6 +7,8 @@ import com.ecommerce.microcommerce.web.model.Product;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -17,7 +19,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
-
+//ajouter une description pour chaque API grâce à l'annotation @Api
+@Api("API pour les opération CRUD sur les produits !")
 @RestController
 public class ProductController {
     @Autowired
@@ -47,6 +50,7 @@ public class ProductController {
      */
     //Récupérer la liste des produits par filtre
     //Nous savons appliquer des filtres sur notre API grâce à Jackson.
+    @ApiOperation("Récupère tous les produit")
     @RequestMapping(value = "/Produits", method = RequestMethod.GET)
     public MappingJacksonValue listeProduits(){
         /*
@@ -74,6 +78,7 @@ public class ProductController {
     la requête SQL automatiquement en partant du nom de votre méthode !
     findById(id) est créée par nous même
      */
+    @ApiOperation("Récupère un produit grâce à son ID à condition que celui-ci soit en stock!")
     @GetMapping(value = "/Produits/{id}")
     public Product afficherUnProduit(@PathVariable int id){
         Product product = productDAO.findById(id);
@@ -90,6 +95,7 @@ public class ProductController {
     Prix : fournit le nom de la propriété sur laquelle le SELECT s'applique.
     GreaterThan : définit une condition "plus grand que".
      */
+    @ApiOperation("Récupérer les ou le produit(s) en comparant le prix fourni avec tous les prix des produits!")
     @GetMapping(value = "test/Produits/{prixLimit}")
     public List<Product> testDeRequetes(@PathVariable int prixLimit){
         return productDAO.findByPrixGreaterThan(prixLimit);
@@ -106,6 +112,7 @@ public class ProductController {
      * Enfin, nous invoquons la méthode created de ResponseEntity, qui accepte comme argument l'URI de la ressource nouvellement créée, et renvoie le code de statut 201.
      */
     //Nous avons remplacé les types de retour pour rendre notre application cohérente avec la norme, grâce à ResponseEntity.
+    @ApiOperation("Ajouter un produit dans la BDD!")
     @PostMapping(value = "/Produits")
     public ResponseEntity<Product> ajouterProduit(@Valid @RequestBody Product product) {
         Product productAdded = productDAO.save(product);
@@ -120,6 +127,7 @@ public class ProductController {
         return ResponseEntity.created(location).build();
     }
     //Supprimer un produit
+    @ApiOperation("Supprimer un produit grâce à son ID à condition que celui-ci soit en stock!")
     @DeleteMapping (value = "/Produits/{id}")
     public void supprimerProduit(@PathVariable int id) {
         productDAO.deleteById(id);
