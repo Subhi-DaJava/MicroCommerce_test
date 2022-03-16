@@ -2,18 +2,18 @@ package com.ecommerce.microcommerce.web.controller;
 
 
 import com.ecommerce.microcommerce.web.dao.ProductDAO;
+import com.ecommerce.microcommerce.web.exceptions.ProduitIntrouvableException;
 import com.ecommerce.microcommerce.web.model.Product;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
@@ -76,7 +76,10 @@ public class ProductController {
      */
     @GetMapping(value = "/Produits/{id}")
     public Product afficherUnProduit(@PathVariable int id){
-        return productDAO.findById(id);
+        Product product = productDAO.findById(id);
+        if(product == null)
+            throw new ProduitIntrouvableException("Le produit avec l'id "+id+" est INTROUVABLE. Écran bleu si je pouvais.");
+        return product;
     }
     /*
     Les conventions ! Spring Data JPA propose un ensemble de conventions qui lui permettront de déduire
@@ -104,7 +107,7 @@ public class ProductController {
      */
     //Nous avons remplacé les types de retour pour rendre notre application cohérente avec la norme, grâce à ResponseEntity.
     @PostMapping(value = "/Produits")
-    public ResponseEntity<Product> ajouterProduit(@RequestBody Product product) {
+    public ResponseEntity<Product> ajouterProduit(@Valid @RequestBody Product product) {
         Product productAdded = productDAO.save(product);
         if (Objects.isNull(productAdded)) {
             return ResponseEntity.noContent().build();
