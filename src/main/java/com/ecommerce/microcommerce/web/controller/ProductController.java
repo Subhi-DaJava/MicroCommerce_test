@@ -18,10 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+
 //ajouter une description pour chaque API grâce à l'annotation @Api
 @Api("API pour les opération CRUD sur les produits !")
 @RestController
@@ -160,8 +158,8 @@ public class ProductController {
 
 
     @GetMapping("/AdminProduits")
-    public HashMap<Product,Integer> calculerMargeProduit(){
-        HashMap<Product,Integer> map = new HashMap<>();
+    public Map<Product,Integer> calculerMargeProduit(){
+        Map<Product,Integer> map = new LinkedHashMap<>();
 
         List<Product> listProduits = productDAO.findAll();
         List<Integer> margePrix = new ArrayList<>();
@@ -172,21 +170,22 @@ public class ProductController {
         for(int i = 0; i < listProduits.size(); i++){
             map.put(listProduits.get(i), margePrix.get(i));
         }
+        return map;
         //Le résulta ci-dessous, c'est généré automatique?
         /*"Product{id=3, nom='Table de Ping Pong', prix=750}": 350,
                 "Product{id=1, nom='Ordinateur portable', prix=350}": 230,
                 "Product{id=2, nom='Aspirateur Robot', prix=500}": 300*/
 
-        /*map.entrySet().forEach(entry -> {
-            System.out.println(entry.getKey()+":"+entry.getValue());
-        });*/
+    /*map.entrySet().forEach(entry -> {
+        System.out.println(entry.getKey()+":"+entry.getValue());
+    });*/
         /*for (Product product : map.keySet()) {
         String key = product.toString();
         String value = map.get(product).toString();
         System.out.println(key + " : " + value);
         }*/
-        return map;
     }
+
     @GetMapping("/ProduitsChers")
     public List<Product> chercherProduitchers(){
         return productDAO.chercherUnProduitCher(300);
