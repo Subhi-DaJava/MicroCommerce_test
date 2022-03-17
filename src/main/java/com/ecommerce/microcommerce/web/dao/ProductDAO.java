@@ -1,6 +1,7 @@
 package com.ecommerce.microcommerce.web.dao;
 
 import com.ecommerce.microcommerce.web.model.Product;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,9 +23,9 @@ public interface ProductDAO extends JpaRepository<Product,Integer> {
      */
     List<Product> findByPrixGreaterThan(int prixLimit);
 
-   /* @Query("SELECT id, nom, prix FROM Product p WHERE p.prix > :prixLimit")
-    List<Product>  chercherUnProduitCher(@Param("prixLimit") int prix);*/
-
+    @Query("SELECT p.id, p.nom, p.prix FROM Product p WHERE p.prix > :prixLimit")
+    List<Product>  chercherUnProduitCher(@Param("prixLimit") int prix);
     //SELECT id, nom, prix FROM Product p WHERE p.prix > ?1
 
+    List<Product> findAllByOrderByNom();
 }

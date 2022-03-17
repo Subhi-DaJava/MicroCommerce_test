@@ -2,6 +2,7 @@ package com.ecommerce.microcommerce.web.controller;
 
 
 import com.ecommerce.microcommerce.web.dao.ProductDAO;
+import com.ecommerce.microcommerce.web.exceptions.ProduitGratuitException;
 import com.ecommerce.microcommerce.web.exceptions.ProduitIntrouvableException;
 import com.ecommerce.microcommerce.web.model.Product;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
@@ -17,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 //ajouter une description pour chaque API grâce à l'annotation @Api
@@ -68,6 +71,12 @@ public class ProductController {
         produitsFiltres.setFilters(listDeNosFiltres);
         return produitsFiltres;
     }
+    //la même méthode, mais moins exigeante
+   /* @ApiOperation("Afficher tous les produits!")
+    @GetMapping("/Produits")
+    public List<Product> getListeOfProduits(){
+        return productDAO.findAll();
+    }*/
 
     /**
      * URI "/Produits/{id}", renvoyer un produit au format JSON qui correspond à la classe Product.
@@ -114,7 +123,10 @@ public class ProductController {
     //Nous avons remplacé les types de retour pour rendre notre application cohérente avec la norme, grâce à ResponseEntity.
     @ApiOperation("Ajouter un produit dans la BDD!")
     @PostMapping(value = "/Produits")
-    public ResponseEntity<Product> ajouterProduit(@Valid @RequestBody Product product) {
+    public ResponseEntity<Product> ajouterProduit(@RequestBody Product product) {
+        if(product.getPrix() == 0 ){
+            throw new ProduitGratuitException("Le prix de vente n'est gratuit");
+        }
         Product productAdded = productDAO.save(product);
         if (Objects.isNull(productAdded)) {
             return ResponseEntity.noContent().build();
@@ -137,6 +149,47 @@ public class ProductController {
     public void updateProduit(@RequestBody Product product)
     {
         productDAO.save(product);
+    }
+
+    //créer une méthode en utilisant des mots clés, afin que Spring Data JPA génère automatiquement la requête.
+    @ApiOperation("Afficher tous les produits par order alphabétique!")
+    @GetMapping("/TriProduits")
+    public List<Product> trierProduitsParOrdreAlphabetique(){
+        return productDAO.findAllByOrderByNom();
+    }
+
+
+    @GetMapping("/AdminProduits")
+    public HashMap<Product,Integer> calculerMargeProduit(){
+        HashMap<Product,Integer> map = new HashMap<>();
+
+        List<Product> listProduits = productDAO.findAll();
+        List<Integer> margePrix = new ArrayList<>();
+
+        for (Product listProduit : listProduits) {
+            margePrix.add(listProduit.getPrix() - listProduit.getPrixAchat());
+        }
+        for(int i = 0; i < listProduits.size(); i++){
+            map.put(listProduits.get(i), margePrix.get(i));
+        }
+        //Le résulta ci-dessous, c'est généré automatique?
+        /*"Product{id=3, nom='Table de Ping Pong', prix=750}": 350,
+                "Product{id=1, nom='Ordinateur portable', prix=350}": 230,
+                "Product{id=2, nom='Aspirateur Robot', prix=500}": 300*/
+
+        /*map.entrySet().forEach(entry -> {
+            System.out.println(entry.getKey()+":"+entry.getValue());
+        });*/
+        /*for (Product product : map.keySet()) {
+        String key = product.toString();
+        String value = map.get(product).toString();
+        System.out.println(key + " : " + value);
+        }*/
+        return map;
+    }
+    @GetMapping("/ProduitsChers")
+    public List<Product> chercherProduitchers(){
+        return productDAO.chercherUnProduitCher(300);
     }
 
 

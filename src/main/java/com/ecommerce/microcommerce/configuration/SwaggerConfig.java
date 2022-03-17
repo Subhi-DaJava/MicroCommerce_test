@@ -25,8 +25,10 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.ecommerce.microcommerce.web"))
                 /*
                 PathSelectors.regex("/Produits.*") permet de passer une expression régulière qui n'accepte que les URI commençant par /Produits.
-                 */
                 .paths(PathSelectors.regex("/Produits.*"))
+                 .paths(PathSelectors.any())
+                 */
+                .paths(PathSelectors.any())
                 .build();
     }
 }
