@@ -190,14 +190,18 @@ public class ProductController {
         }*/
     }
 
-    @GetMapping( "/ProduitsChers/")
-    public List<Product> chercherProduitsChers(){
-        return productDAO.chercherUnProduitCher(400);
+    @GetMapping( "/ProduitsChers/{prix}")
+    public List<Product> chercherProduitsChers(@PathVariable int prix){
+        return productDAO.chercherProduitsCher(prix);
     }
 
-    @GetMapping("/unProduits")
-    public Product trouverProduit(){
-        return productDAO.chercherProduit(2);
+    @GetMapping("/unProduit/{id}")
+    public Product trouverProduit(@PathVariable int id){
+        return productDAO.chercherProduit(id);
+    }
+    @GetMapping( "/ProduitsCher/{prix}")
+    public List<Product> chercherProduitChers(@PathVariable int prix){
+        return productDAO.chercherProduitsChers(prix);
     }
 
 }

@@ -2,8 +2,8 @@ package com.ecommerce.microcommerce.web.model;
 import com.fasterxml.jackson.annotation.JsonFilter;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 //@JsonIgnoreProperties(value = "prixAchat", "id")
 //@JsonFilter("monFiltreDynamique")
 @Entity
+//@Table(name = "product")
 public class Product {
     //Generate(strategy = GenerationType.IDENTITY)
     @Id
@@ -58,6 +59,12 @@ public class Product {
         this.nom = nom;
         this.prix = prix;
         this.prixAchat = prixAchat;
+    }
+
+    public Product(int id, String nom, int prix) {
+        this.id = id;
+        this.nom = nom;
+        this.prix = prix;
     }
 
     public int getPrixAchat() {

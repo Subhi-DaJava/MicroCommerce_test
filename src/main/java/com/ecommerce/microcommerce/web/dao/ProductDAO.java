@@ -20,12 +20,15 @@ public interface ProductDAO extends JpaRepository<Product,Integer> {
      */
     List<Product> findByPrixGreaterThan(int prixLimit);
 
-    @Query("SELECT id, nom, prix FROM Product p WHERE p.prix > :prixLimit")
-    List<Product>  chercherUnProduitCher(@Param("prixLimit") int prix);
+    @Query("SELECT p FROM Product p WHERE p.prix > :prixLimit")
+    List<Product>  chercherProduitsCher(@Param("prixLimit") int prix);
     //SELECT id, nom, prix FROM Product p WHERE p.prix > ?1
 
     List<Product> findAllByOrderByNom();
 
-    @Query("SELECT id AS id, nom AS nom FROM Product WHERE id = :id")
+    @Query("SELECT p FROM Product p WHERE p.id = :id and p.prix > 500")
     Product chercherProduit(@Param("id") int id);
+    //cette que jpql ça ne fonctionne pas pour l'instant
+    @Query("SELECT p.id as id, p.nom as nom, p.prix as prix FROM Product p WHERE p.prix > :prixLimit")
+    List<Product>  chercherProduitsChers(@Param("prixLimit") int prix);
 }
