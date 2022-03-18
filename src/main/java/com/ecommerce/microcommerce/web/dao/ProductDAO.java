@@ -1,15 +1,12 @@
 package com.ecommerce.microcommerce.web.dao;
 
 import com.ecommerce.microcommerce.web.model.Product;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-@Repository
+//pas besoin d'annoter @Repository
 public interface ProductDAO extends JpaRepository<Product,Integer> {
     //Notre méthode
     /*
@@ -28,4 +25,7 @@ public interface ProductDAO extends JpaRepository<Product,Integer> {
     //SELECT id, nom, prix FROM Product p WHERE p.prix > ?1
 
     List<Product> findAllByOrderByNom();
+
+    @Query("SELECT id AS id, nom AS nom FROM Product WHERE id = :id")
+    Product chercherProduit(@Param("id") int id);
 }

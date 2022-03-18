@@ -12,8 +12,9 @@ import javax.validation.constraints.Size;
 //@JsonFilter("monFiltreDynamique")
 @Entity
 public class Product {
-    @Id
     //Generate(strategy = GenerationType.IDENTITY)
+    @Id
+    //@GeneratedValue
     private int id;
     @Size(min = 3, max = 25)
     private String nom;

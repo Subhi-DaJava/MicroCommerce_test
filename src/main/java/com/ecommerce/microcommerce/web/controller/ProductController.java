@@ -24,8 +24,12 @@ import java.util.*;
 @Api("API pour les opération CRUD sur les produits !")
 @RestController
 public class ProductController {
-    @Autowired
     private ProductDAO productDAO;
+
+    public ProductController(ProductDAO productDAO) {
+        super();
+        this.productDAO = productDAO;
+    }
     //Même pas besoin de spécifier son implémentation(ProductDAO -> ProductDAOImpl)
     /**
      * Tout d'abord, nous avons créé une variable de type ProductDao, que nous avons définie en private final afin que
@@ -186,10 +190,14 @@ public class ProductController {
         }*/
     }
 
-    @GetMapping("/ProduitsChers")
-    public List<Product> chercherProduitchers(){
-        return productDAO.chercherUnProduitCher(300);
+    @GetMapping( "/ProduitsChers/")
+    public List<Product> chercherProduitsChers(){
+        return productDAO.chercherUnProduitCher(400);
     }
 
+    @GetMapping("/unProduits")
+    public Product trouverProduit(){
+        return productDAO.chercherProduit(2);
+    }
 
 }
