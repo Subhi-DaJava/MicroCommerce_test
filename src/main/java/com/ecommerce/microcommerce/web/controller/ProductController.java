@@ -200,7 +200,7 @@ public class ProductController {
         return productDAO.chercherProduit(id);
     }
     @GetMapping( "/ProduitsCher/{prix}")
-    public List<Product> chercherProduitChers(@PathVariable int prix){
+    public List<Product> chercherProduitChers(@PathVariable("prix") int prix){
         return productDAO.chercherProduitsChers(prix);
     }
 
