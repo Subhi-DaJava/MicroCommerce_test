@@ -30,6 +30,6 @@ public interface ProductDAO extends JpaRepository<Product,Integer> {
     Product chercherProduit(@Param("id") int id);
     //cette que jpql ça ne fonctionne pas pour l'instant
     //formatage différemment en renseignant le constructeur de mon objet dans la requête
-    @Query("SELECT new Product(id,nom,prix) FROM Product p WHERE p.prix > :prixLimit")
+    @Query("SELECT p.id,p.nom,p.prix FROM Product p WHERE p.prix > :prixLimit")
     List<Product>  chercherProduitsChers(@Param("prixLimit") int prix);
 }

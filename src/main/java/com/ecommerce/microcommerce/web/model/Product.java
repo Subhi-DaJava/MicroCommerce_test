@@ -1,5 +1,7 @@
 package com.ecommerce.microcommerce.web.model;
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -8,7 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 ///Elle demande à ce que prixAchat et id ne soient pas renvoyés en cas de requête pour récupérer l'entité/le Bean correspondant.
-//@JsonIgnoreProperties(value = "prixAchat", "id")
+//@JsonIgnoreProperties(value ={"prixAchat", "id"})
 //@JsonFilter("monFiltreDynamique")
 @Entity
 //@Table(name = "product")
@@ -23,6 +25,7 @@ public class Product {
     private int prix;
 
     //information que nous ne souhaitons pas exposer
+    //@JsonIgnore
     private int prixAchat;
 
     public Product() {
@@ -61,11 +64,12 @@ public class Product {
         this.prixAchat = prixAchat;
     }
 
-    public Product(int id, String nom, int prix) {
+   /* public Product(int id, String nom, int prix) {
         this.id = id;
         this.nom = nom;
         this.prix = prix;
-    }
+    }*/
+
 
     public int getPrixAchat() {
         return prixAchat;
